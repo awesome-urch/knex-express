@@ -55,6 +55,16 @@ module.exports = ({
       .timeout(timeout)
   }
 
+  const updateRange = (options, props) => {
+    delete props.id // not allowed to set `id`
+
+    return knex.update(props)
+      .from(tableName)
+      .where(options.col,options.symbol,options.val)
+      .returning(selectableProps)
+      .timeout(timeout)
+  }
+
   const destroy = id => knex.del()
     .from(tableName)
     .where({ id })
@@ -71,6 +81,7 @@ module.exports = ({
     findOne,
     findById,
     update,
+    updateRange,
     destroy
   }
 }

@@ -54,8 +54,6 @@ const getProjects = (req, res, next) => {
 const getProject = (req, res, next) => {
   const projectId = req.params.id
 
-  console.log("props");
-
   Project.findById(projectId)
     .then(project => res.json({
       ok: true,
@@ -65,7 +63,7 @@ const getProject = (req, res, next) => {
     .catch(next)
 }
 
-const putProject = async (req, res, next) => {
+const putProject1 = async (req, res, next) => {
   const projectId = req.params.id
   const props = req.body
   try{
@@ -81,27 +79,59 @@ const putProject = async (req, res, next) => {
     next
   }
 
-  // Project.update(projectId, props)
-  //   .then(project => res.json({
-  //     ok: true,
-  //     message: 'Project updated',
-  //     project
-  //   }))
-  //   .catch(next)
-
-
 }
 
-const deleteProject = (req, res, next) => {
+const putProject = async (req, res, next) => {
+  const projectId = req.params.id
+  const props = req.body
+  try{
+    const project = await update(projectId, props)
+    if(project){
+      res.json({
+        ok: true,
+        message: 'Project updated!',
+        project
+      })
+    }
+  }catch(err){
+    next(err);
+  }
+}
+
+const update = async (projectId, props) => {
+  try{
+    const project = await Project.findById(projectId);
+    console.log(project);
+    if(!project.length){
+      throw "Project does not exist";
+    }
+
+    const updateProject = await Project.update(projectId, props, ['id', 'name']);
+    // const project = await Project.updateRange({col: 'id', symbol: '<', val: projectId}, props);
+    console.log(updateProject);
+    if(!updateProject){
+      throw new Error("Couldn't update");
+    }
+    return updateProject;
+  }catch(err){
+    throw new Error(err);
+  }
+}
+
+const deleteProject = async (req, res, next) => {
   const projectId = req.params.id
 
-  Project.destroy(projectId)
-    .then(deleteCount => res.json({
+  try{
+    const deleteCount = await Project.destroy(projectId);
+    res.json({
       ok: true,
       message: 'Project deleted',
       deleteCount
-    }))
-    .catch(next)
+    })
+  }catch(err){
+    next
+  }
+
 }
 
 module.exports = {
@@ -109,5 +139,6 @@ module.exports = {
   getProjects,
   getProject,
   putProject,
-  deleteProject
+  deleteProject,
+  update,
 }

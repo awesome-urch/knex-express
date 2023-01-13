@@ -2,10 +2,9 @@
   "name": "knex-test",
   "version": "0.0.6",
   "description": "An example knex app structure.",
- 
   "scripts": {
     "start": "./server/start.js",
-    "test": "ha ha, no.",
+    "test": "mocha",
     "db:migrate": "npx knex migrate:latest",
     "db:seed": "npx knex seed:run"
   },
@@ -16,9 +15,13 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "chai": "^4.3.7",
+    "cors": "^2.8.5",
     "express": "4.17.1",
     "knex": "0.20.8",
+    "mocha": "^10.2.0",
     "mysql": "^2.18.1",
-    "pg": "7.18.1"
+    "pg": "7.18.1",
+    "sinon": "^15.0.1"
   }
 }

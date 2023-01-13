@@ -19,7 +19,12 @@ const selectableProps = [
 // Bcrypt functions used for hashing password and later verifying it.
 const SALT_ROUNDS = 10
 const hashPassword = password => bcrypt.hash(password, SALT_ROUNDS)
-const verifyPassword = (password, hash) => bcrypt.compare(password, hash)
+const verifyPassword = (password, hash) => {
+  console.log(password + " :: " + hash);
+
+
+  return bcrypt.compare(password, hash)
+}
 
 // Always perform this logic before saving to db. This includes always hashing
 // the password field prior to writing so it is never saved in plain text.
@@ -44,24 +49,49 @@ module.exports = knex => {
   const create = props => beforeSave(props)
     .then(user => guts.create(user))
 
-  const verify = (username, password) => {
+  const verify = async (username, password) => {
     const matchErrorMsg = 'Username or password do not match'
+
+    const user = await knex.select()
+    .from(tableName)
+    .where({ username })
+    .timeout(guts.timeout)
+
+    if (!user.length) throw matchErrorMsg
+
+    const [isMatch] = await Promise.all([verifyPassword(password, user[0].password)]);
+
+    if (!isMatch) throw matchErrorMsg
+
+    return user
+
+/*
 
     knex.select()
       .from(tableName)
       .where({ username })
       .timeout(guts.timeout)
       .then(user => {
-        if (!user) throw matchErrorMsg
+        if (!user.length) throw matchErrorMsg
 
         return user
       })
-      .then(user => Promise.all([user, verifyPassword(password, user.password)]))
+      .then(user => {
+        return Promise.all([user[0], verifyPassword(password, user[0].password)])
+      })
       .then(([user, isMatch]) => {
+        if(!isMatch){
+          console.log("no match")
+        }else{
+          console.log("is match")
+        }
         if (!isMatch) throw matchErrorMsg
 
         return user
       })
+
+  */
+
   }
 
   return {
