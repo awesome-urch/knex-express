@@ -2,7 +2,7 @@
   "name": "knex-test",
   "version": "0.0.6",
   "description": "An example knex app structure.",
-  "main": "server/index.js",
+ 
   "scripts": {
     "start": "./server/start.js",
     "test": "ha ha, no.",
@@ -16,9 +16,9 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
-    "body-parser": "1.19.0",
     "express": "4.17.1",
     "knex": "0.20.8",
+    "mysql": "^2.18.1",
     "pg": "7.18.1"
   }
 }

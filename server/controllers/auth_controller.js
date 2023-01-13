@@ -7,14 +7,27 @@ const {
   UNAUTHORIZED
 } = require('../helpers/error_helper')
 
+const postLoginTest = (req, res, next) => {
+  console.log(`username ${req.body.username} :: pwd ${req.body.password}`);
+
+  res.json({
+    ok: true,
+    message: 'username ' + req.body.username,
+  })
+
+}
+
 const postLogin = (req, res, next) => {
   const username = String(req.body.username)
   const password = String(req.body.password)
+
+  console.log(username);
 
   if (!username || !password) next(createError({
     status: BAD_REQUEST,
     message: '`username` + `password` are required fields'
   }))
+
 
   User.verify(username, password)
     .then(user => res.json({

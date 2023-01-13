@@ -5,8 +5,11 @@ const bodyParser = require('body-parser')
 
 const app = express()
 
-app.use(bodyParser.json())
-app.disable('x-powered-by')
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// app.disable('x-powered-by')
 
 app.use('/', [
   require('./routes/auth_routes'),

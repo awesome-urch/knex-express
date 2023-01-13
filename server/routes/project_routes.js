@@ -7,7 +7,7 @@ const {
   getProject,
   putProject,
   deleteProject
-} = require('../controllers/project_controller')
+} = require('../controllers/project_controller.ts')
 
 router.route('/users/:id/projects')
   .post(postProjects)

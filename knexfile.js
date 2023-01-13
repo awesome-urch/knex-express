@@ -4,8 +4,12 @@
 // TODO: implement more dynamic env var settings loader
 module.exports = {
   development: {
-    client: 'pg',
-    connection: 'postgres://localhost:5432/knex-test',
+    client: 'mysql',
+    connection: {
+      database: 'node1',
+      user:     'root',
+      password: ''
+    },
     migrations: {
       tableName: 'knex_migrations',
       directory: `${ __dirname }/db/migrations`
